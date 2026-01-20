@@ -5,7 +5,8 @@
   "scripts": {
     "lint:fix": "eslint back --ext .ts --fix && prettier --write back",
     "install:all": "cd back && npm install",
-    "update:all": "cd back && npm update"
+    "update:all": "cd back && npm update",
+    "dev:back": "cd back && npm run dev"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.53.1",
