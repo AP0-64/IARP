@@ -20,7 +20,8 @@ discussionRouter.post('/', async (req: Request, res: Response) => {
   const caractere: string = req.body.caractere;
   const discussion: string = req.body.discussion;
   discussionModel.createDiscussion(
-    caractere, discussion,
+    caractere,
+    discussion,
     (error: Error, message: string) => {
       if (error) {
         return res.status(500).json({ errorMessage: error.message });

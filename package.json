@@ -1,0 +1,22 @@
+{
+  "name": "iarp-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "lint:fix": "eslint back --ext .ts --fix && prettier --write back",
+    "install:all": "cd back && npm install",
+    "update:all": "cd back && npm update"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.53.1",
+    "@typescript-eslint/parser": "^8.53.1",
+    "eslint": "^9.39.2",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^17.0.0",
+    "prettier": "^3.8.0"
+  }
+}
