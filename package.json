@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "dev": "cd back && npm run dev",
+    "build": "cd back && npm run build",
+    "lint": "eslint back --ext .ts",
     "lint:fix": "eslint back --ext .ts --fix && prettier --write back",
     "install:all": "npm install && cd back && npm install",
-    "update:all": "npm update && cd back && npm update",
-    "dev:back": "cd back && npm run dev"
+    "update:all": "npm update && cd back && npm update"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.53.1",

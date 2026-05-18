@@ -10,7 +10,8 @@
     "pg": "^8.17.1"
   },
   "scripts": {
-    "dev": "ts-node index.ts"
+    "dev": "ts-node index.ts",
+    "build": "tsc"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
