@@ -1,80 +1,75 @@
 import express, { Request, Response } from 'express';
 
 import * as characterModel from '../cruds/characters';
-import Character from '../models/characters';
+import {
+  validateCharacterName,
+  validateSystemPrompt,
+  validateDescription,
+  validateUUID,
+} from '../validators';
+
+import { asyncHandler } from './routeHelpers';
 
 const charactersRouter = express.Router();
 
-charactersRouter.get('/', async (_: Request, res: Response) => {
-  characterModel.findAllCharacters((error: Error, characters: Character[]) => {
-    if (error) {
-      return res.status(500).json({ errorMessage: error.message });
-    }
+charactersRouter.get(
+  '/',
+  asyncHandler(async (req: Request, res: Response) => {
+    const characters = await characterModel.findAllCharacters();
     return res.status(200).json({ data: characters });
-  });
-});
+  })
+);
 
-charactersRouter.post('/', async (req: Request, res: Response) => {
-  const name: string = req.body.name;
-  const system_prompt: string | null = req.body.system_prompt || null;
-  const description_ia: string = req.body.description_ia;
-  characterModel.createCharacter(
-    name,
-    system_prompt,
-    description_ia,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (error: Error, result: any) => {
-      if (error) {
-        return res.status(500).json({ errorMessage: error.message });
-      }
-      return res.status(201).json({ data: result });
-    }
-  );
-});
+charactersRouter.post(
+  '/',
+  asyncHandler(async (req: Request, res: Response) => {
+    const name = validateCharacterName(req.body.name);
+    const systemPrompt = validateSystemPrompt(req.body.systemPrompt);
+    const descriptionIa = validateDescription(req.body.descriptionIa);
 
-charactersRouter.get('/:id', async (req: Request, res: Response) => {
-  const characterId: string = req.params.id as string;
-  characterModel.findOneCharacter(
-    characterId,
-    (error: Error, character: Character) => {
-      if (error) {
-        return res.status(500).json({ errorMessage: error.message });
-      }
-      return res.status(200).json({ data: character });
-    }
-  );
-});
+    const result = await characterModel.createCharacter(
+      name,
+      systemPrompt,
+      descriptionIa
+    );
+    return res.status(201).json({ data: result });
+  })
+);
 
-charactersRouter.put('/:id', async (req: Request, res: Response) => {
-  const characterId: string = req.params.id as string;
-  const name: string = req.body.name;
-  const system_prompt: string | null = req.body.system_prompt || null;
-  const description_ia: string = req.body.description_ia;
-  characterModel.updateCharacter(
-    characterId,
-    name,
-    system_prompt,
-    description_ia,
-    (error: Error, message: string) => {
-      if (error) {
-        return res.status(500).json({ errorMessage: error.message });
-      }
-      return res.status(200).json({ message: message });
-    }
-  );
-});
+charactersRouter.get(
+  '/:id',
+  asyncHandler(async (req: Request, res: Response) => {
+    const characterId = validateUUID(req.params.id);
+    const character = await characterModel.findOneCharacter(characterId);
+    return res.status(200).json({ data: character });
+  })
+);
 
-charactersRouter.delete('/:id', async (req: Request, res: Response) => {
-  const characterId: string = req.params.id as string;
-  characterModel.deleteCharacter(
-    characterId,
-    (error: Error, message: string) => {
-      if (error) {
-        return res.status(500).json({ errorMessage: error.message });
-      }
-      return res.status(200).json({ message: message });
-    }
-  );
-});
+charactersRouter.put(
+  '/:id',
+  asyncHandler(async (req: Request, res: Response) => {
+    const characterId = validateUUID(req.params.id);
+    const name = validateCharacterName(req.body.name);
+    const systemPrompt = validateSystemPrompt(req.body.systemPrompt);
+    const descriptionIa = validateDescription(req.body.descriptionIa);
+
+    const message = await characterModel.updateCharacter(
+      characterId,
+      name,
+      systemPrompt,
+      descriptionIa
+    );
+    return res.status(200).json({ message });
+  })
+);
+
+charactersRouter.delete(
+  '/:id',
+  asyncHandler(async (req: Request, res: Response) => {
+    const characterId = validateUUID(req.params.id);
+    const message = await characterModel.deleteCharacter(characterId);
+    return res.status(200).json({ message });
+  })
+);
 
 export default charactersRouter;

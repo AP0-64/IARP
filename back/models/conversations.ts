@@ -1,9 +1,9 @@
 interface Conversation {
   id: string;
-  user_id: string;
-  character_id: string;
-  created_at: Date;
-  updated_at: Date;
+  userId: string;
+  characterId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export default Conversation;

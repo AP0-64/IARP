@@ -1,74 +1,71 @@
 import express, { Request, Response } from 'express';
 
 import * as userModel from '../cruds/users';
-import User from '../models/users';
+import {
+  validateUsername,
+  validateEmail,
+  validatePassword,
+  validateUUID,
+} from '../validators';
+
+import { asyncHandler } from './routeHelpers';
 
 const usersRouter = express.Router();
 
-usersRouter.get('/', async (_: Request, res: Response) => {
-  userModel.findAllUsers((error: Error, users: User[]) => {
-    if (error) {
-      return res.status(500).json({ errorMessage: error.message });
-    }
+usersRouter.get(
+  '/',
+  asyncHandler(async (req: Request, res: Response) => {
+    const users = await userModel.findAllUsers();
     return res.status(200).json({ data: users });
-  });
-});
+  })
+);
 
-usersRouter.post('/', async (req: Request, res: Response) => {
-  const username: string = req.body.username;
-  const email: string = req.body.email;
-  const password_hash: string = req.body.password_hash;
-  userModel.createUser(
-    username,
-    email,
-    password_hash,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (error: Error, result: any) => {
-      if (error) {
-        return res.status(500).json({ errorMessage: error.message });
-      }
-      return res.status(201).json({ data: result });
-    }
-  );
-});
+usersRouter.post(
+  '/',
+  asyncHandler(async (req: Request, res: Response) => {
+    const username = validateUsername(req.body.username);
+    const email = validateEmail(req.body.email);
+    const passwordHash = validatePassword(req.body.passwordHash);
 
-usersRouter.get('/:id', async (req: Request, res: Response) => {
-  const userId: string = req.params.id as string;
-  userModel.findOneUser(userId, (error: Error, user: User) => {
-    if (error) {
-      return res.status(500).json({ errorMessage: error.message });
-    }
+    const result = await userModel.createUser(username, email, passwordHash);
+    return res.status(201).json({ data: result });
+  })
+);
+
+usersRouter.get(
+  '/:id',
+  asyncHandler(async (req: Request, res: Response) => {
+    const userId = validateUUID(req.params.id);
+    const user = await userModel.findOneUser(userId);
     return res.status(200).json({ data: user });
-  });
-});
+  })
+);
 
-usersRouter.put('/:id', async (req: Request, res: Response) => {
-  const userId: string = req.params.id as string;
-  const username: string = req.body.username;
-  const email: string = req.body.email;
-  const password_hash: string = req.body.password_hash;
-  userModel.updateUser(
-    userId,
-    username,
-    email,
-    password_hash,
-    (error: Error, message: string) => {
-      if (error) {
-        return res.status(500).json({ errorMessage: error.message });
-      }
-      return res.status(200).json({ message: message });
-    }
-  );
-});
+usersRouter.put(
+  '/:id',
+  asyncHandler(async (req: Request, res: Response) => {
+    const userId = validateUUID(req.params.id);
+    const username = validateUsername(req.body.username);
+    const email = validateEmail(req.body.email);
+    const passwordHash = validatePassword(req.body.passwordHash);
 
-usersRouter.delete('/:id', async (req: Request, res: Response) => {
-  const userId: string = req.params.id as string;
-  userModel.deleteUser(userId, (error: Error, message: string) => {
-    if (error) {
-      return res.status(500).json({ errorMessage: error.message });
-    }
-    return res.status(200).json({ message: message });
-  });
-});
+    const message = await userModel.updateUser(
+      userId,
+      username,
+      email,
+      passwordHash
+    );
+    return res.status(200).json({ message });
+  })
+);
+
+usersRouter.delete(
+  '/:id',
+  asyncHandler(async (req: Request, res: Response) => {
+    const userId = validateUUID(req.params.id);
+    const message = await userModel.deleteUser(userId);
+    return res.status(200).json({ message });
+  })
+);
 
 export default usersRouter;

@@ -1,10 +1,10 @@
 interface Message {
   id: string;
-  conversation_id: string;
-  role_ia: 'user' | 'assistant';
+  conversationId: string;
+  roleIa: 'user' | 'assistant';
   content: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export default Message;

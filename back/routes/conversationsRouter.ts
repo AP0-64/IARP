@@ -1,77 +1,61 @@
 import express, { Request, Response } from 'express';
 
 import * as conversationModel from '../cruds/conversations';
-import Conversation from '../models/conversations';
+import { validateUUID } from '../validators';
+
+import { asyncHandler } from './routeHelpers';
 
 const conversationsRouter = express.Router();
 
-conversationsRouter.get('/', async (_: Request, res: Response) => {
-  conversationModel.findAllConversations(
-    (error: Error, conversations: Conversation[]) => {
-      if (error) {
-        return res.status(500).json({ errorMessage: error.message });
-      }
-      return res.status(200).json({ data: conversations });
-    }
-  );
-});
+conversationsRouter.get(
+  '/',
+  asyncHandler(async (req: Request, res: Response) => {
+    const conversations = await conversationModel.findAllConversations();
+    return res.status(200).json({ data: conversations });
+  })
+);
 
-conversationsRouter.post('/', async (req: Request, res: Response) => {
-  const user_id: string = req.body.user_id;
-  const character_id: string = req.body.character_id;
-  conversationModel.createConversation(
-    user_id,
-    character_id,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (error: Error, result: any) => {
-      if (error) {
-        return res.status(500).json({ errorMessage: error.message });
-      }
-      return res.status(201).json({ data: result });
-    }
-  );
-});
+conversationsRouter.post(
+  '/',
+  asyncHandler(async (req: Request, res: Response) => {
+    const userId = validateUUID(req.body.userId);
+    const characterId = validateUUID(req.body.characterId);
 
-conversationsRouter.get('/:id', async (req: Request, res: Response) => {
-  const conversationId: string = req.params.id as string;
-  conversationModel.findOneConversation(
-    conversationId,
-    (error: Error, conversation: Conversation) => {
-      if (error) {
-        return res.status(500).json({ errorMessage: error.message });
-      }
-      return res.status(200).json({ data: conversation });
-    }
-  );
-});
+    const result = await conversationModel.createConversation(
+      userId,
+      characterId
+    );
+    return res.status(201).json({ data: result });
+  })
+);
+
+conversationsRouter.get(
+  '/:id',
+  asyncHandler(async (req: Request, res: Response) => {
+    const conversationId = validateUUID(req.params.id);
+    const conversation =
+      await conversationModel.findOneConversation(conversationId);
+    return res.status(200).json({ data: conversation });
+  })
+);
 
 conversationsRouter.get(
   '/user/:userId',
-  async (req: Request, res: Response) => {
-    const userId: string = req.params.userId as string;
-    conversationModel.findConversationsByUser(
-      userId,
-      (error: Error, conversations: Conversation[]) => {
-        if (error) {
-          return res.status(500).json({ errorMessage: error.message });
-        }
-        return res.status(200).json({ data: conversations });
-      }
-    );
-  }
+  asyncHandler(async (req: Request, res: Response) => {
+    const userId = validateUUID(req.params.userId);
+    const conversations =
+      await conversationModel.findConversationsByUser(userId);
+    return res.status(200).json({ data: conversations });
+  })
 );
 
-conversationsRouter.delete('/:id', async (req: Request, res: Response) => {
-  const conversationId: string = req.params.id as string;
-  conversationModel.deleteConversation(
-    conversationId,
-    (error: Error, message: string) => {
-      if (error) {
-        return res.status(500).json({ errorMessage: error.message });
-      }
-      return res.status(200).json({ message: message });
-    }
-  );
-});
+conversationsRouter.delete(
+  '/:id',
+  asyncHandler(async (req: Request, res: Response) => {
+    const conversationId = validateUUID(req.params.id);
+    const message = await conversationModel.deleteConversation(conversationId);
+    return res.status(200).json({ message });
+  })
+);
 
 export default conversationsRouter;
