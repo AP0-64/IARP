@@ -5,6 +5,7 @@ import {
   validateUsername,
   validateEmail,
   validatePassword,
+  validateOptionalPassword,
   validateUUID,
 } from '../validators';
 
@@ -25,9 +26,9 @@ usersRouter.post(
   asyncHandler(async (req: Request, res: Response) => {
     const username = validateUsername(req.body.username);
     const email = validateEmail(req.body.email);
-    const passwordHash = validatePassword(req.body.passwordHash);
+    const password = validatePassword(req.body.password);
 
-    const result = await userModel.createUser(username, email, passwordHash);
+    const result = await userModel.createUser(username, email, password);
     return res.status(201).json({ data: result });
   })
 );
@@ -50,13 +51,13 @@ usersRouter.put(
     const userId = validateUUID(req.params.id);
     const username = validateUsername(req.body.username);
     const email = validateEmail(req.body.email);
-    const passwordHash = validatePassword(req.body.passwordHash);
+    const password = validateOptionalPassword(req.body.password);
 
     const message = await userModel.updateUser(
       userId,
       username,
       email,
-      passwordHash
+      password
     );
     return res.status(200).json({ message });
   })

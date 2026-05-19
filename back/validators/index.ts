@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 // Email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -83,6 +85,43 @@ export const validateEmail = (email: unknown): string => {
 };
 
 export const validatePassword = (password: unknown): string => {
+  if (typeof password !== 'string') {
+    throw new ValidationError('Password must be a string');
+  }
+  if (password.length < MIN_PASSWORD) {
+    throw new ValidationError(
+      `Password must be at least ${MIN_PASSWORD} characters long`
+    );
+  }
+  if (password.length > MAX_PASSWORD) {
+    throw new ValidationError(
+      `Password must be at most ${MAX_PASSWORD} characters long`
+    );
+  }
+  return password;
+};
+
+// Hash password using bcrypt
+export const hashPassword = async (password: string): Promise<string> => {
+  const saltRounds = 10;
+  return bcrypt.hash(password, saltRounds);
+};
+
+// Compare password with hash
+export const comparePassword = async (
+  password: string,
+  hash: string
+): Promise<boolean> => {
+  return bcrypt.compare(password, hash);
+};
+
+// Validate optional password (for updates)
+export const validateOptionalPassword = (
+  password: unknown
+): string | undefined => {
+  if (password === null || password === undefined) {
+    return undefined;
+  }
   if (typeof password !== 'string') {
     throw new ValidationError('Password must be a string');
   }
