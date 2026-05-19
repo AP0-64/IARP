@@ -2,7 +2,10 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-import discussionRouter from './routes/discussionsRouter';
+import usersRouter from './routes/usersRouter';
+import charactersRouter from './routes/charactersRouter';
+import conversationsRouter from './routes/conversationsRouter';
+import messagesRouter from './routes/messagesRouter';
 
 dotenv.config();
 
@@ -38,7 +41,10 @@ app.use(
 app.use(express.json());
 
 // Routes API
-app.use('/api/discussions', discussionRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/characters', charactersRouter);
+app.use('/api/conversations', conversationsRouter);
+app.use('/api/messages', messagesRouter);
 
 // Global error handlers
 process.on('uncaughtException', err => {
