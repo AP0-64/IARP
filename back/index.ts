@@ -27,7 +27,7 @@ if (missingEnvVars.length > 0) {
   process.exit(1);
 }
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT;
 
 const app = express();
 

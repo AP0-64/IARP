@@ -1,4 +1,5 @@
 # Variables de base de données
+
 # Option 1: Utiliser DATABASE_URL directement
 DATABASE_URL=postgresql://username:password@hostname:5432/dbname
 
