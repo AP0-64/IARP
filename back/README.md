@@ -86,7 +86,7 @@ back/
 │   └── index.ts
 ├── db-config.ts        # Configuration de la base de données
 ├── index.ts            # Point d'entrée de l'application
-├── .env.example        # Modèle de variables d'environnement
+├── env_example.txt     # Modèle de variables d'environnement
 └── package.json        # Dépendances du projet
 ```
 
