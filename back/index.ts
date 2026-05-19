@@ -6,7 +6,26 @@ import charactersRouter from './routes/charactersRouter';
 import conversationsRouter from './routes/conversationsRouter';
 import messagesRouter from './routes/messagesRouter';
 
+// Charger les variables d'environnement
 dotenv.config();
+
+// Valider les variables d'environnement critiques
+const requiredEnvVars = [
+  'DB_USER',
+  'DB_PASSWORD',
+  'DB_HOST',
+  'DB_PORT',
+  'DB_NAME',
+];
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  console.error(
+    "Erreur: Variables d'environnement manquantes:",
+    missingEnvVars.join(', ')
+  );
+  process.exit(1);
+}
 
 const port = process.env.PORT || 4000;
 
