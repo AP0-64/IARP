@@ -36,6 +36,9 @@ messagesRouter.get(
   asyncHandler(async (req: Request, res: Response) => {
     const messageId = validateUUID(req.params.id);
     const message = await messageModel.findOneMessage(messageId);
+    if (!message) {
+      return res.status(404).json({ errorMessage: 'Message not found' });
+    }
     return res.status(200).json({ data: message });
   })
 );

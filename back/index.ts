@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import rateLimit from 'express-rate-limit';
 
 import usersRouter from './routes/usersRouter';
 import charactersRouter from './routes/charactersRouter';
@@ -32,8 +33,16 @@ const port = process.env.PORT || '3000';
 
 const app = express();
 
+// Rate limiting middleware
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
+
 // Middleware
 app.use(express.json());
+app.use('/api/', limiter);
 
 // Routes API
 app.use('/api/users', usersRouter);
@@ -47,10 +56,10 @@ app.get('/health', (_req: express.Request, res: express.Response) => {
 });
 
 // 404 handler
-app.use((req: express.Request, res: express.Response) => {
+app.use((_req: express.Request, res: express.Response) => {
   res
     .status(404)
-    .json({ errorMessage: `Route ${req.method} ${req.path} not found` });
+    .json({ errorMessage: `Route ${_req.method} ${_req.path} not found` });
 });
 
 // Global error handler middleware

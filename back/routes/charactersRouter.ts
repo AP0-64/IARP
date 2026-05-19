@@ -41,6 +41,9 @@ charactersRouter.get(
   asyncHandler(async (req: Request, res: Response) => {
     const characterId = validateUUID(req.params.id);
     const character = await characterModel.findOneCharacter(characterId);
+    if (!character) {
+      return res.status(404).json({ errorMessage: 'Character not found' });
+    }
     return res.status(200).json({ data: character });
   })
 );
