@@ -39,7 +39,7 @@ usersRouter.get(
     const userId = validateUUID(req.params.id);
     const user = await userModel.findOneUser(userId);
     if (!user) {
-      return res.status(404).json({ errorMessage: 'User not found' });
+      return res.status(404).json({ errorMessage: 'Utilisateur non trouvé' });
     }
     return res.status(200).json({ data: user });
   })

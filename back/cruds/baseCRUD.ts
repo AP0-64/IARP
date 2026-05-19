@@ -42,7 +42,7 @@ export const createBaseCRUD = <T>(config: CRUDConfig) => {
     deleteOne: async (id: string): Promise<string> => {
       const query = `DELETE FROM ${tableName} WHERE ${primaryKey} = $1`;
       await connection.query(query, [id]);
-      return `${tableName} record successfully deleted`;
+      return `Enregistrement ${tableName} supprimé avec succès`;
     },
 
     /**

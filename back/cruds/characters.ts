@@ -18,7 +18,7 @@ export const createCharacter = async (
   ]);
   return {
     id: result.rows[0].id as string,
-    message: 'character successfully created',
+    message: 'Personnage créé avec succès',
   };
 };
 
@@ -34,7 +34,7 @@ export const updateCharacter = async (
   const query =
     'UPDATE characters SET name = $1, system_prompt = $2, description_ia = $3, updated_at = NOW() WHERE id = $4';
   await baseCRUD.query(query, [name, systemPrompt, descriptionIa, characterId]);
-  return 'character successfully updated';
+  return 'Personnage mis à jour avec succès';
 };
 
 export const deleteCharacter = baseCRUD.deleteOne;

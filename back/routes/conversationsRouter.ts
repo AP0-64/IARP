@@ -36,7 +36,7 @@ conversationsRouter.get(
     const conversation =
       await conversationModel.findOneConversation(conversationId);
     if (!conversation) {
-      return res.status(404).json({ errorMessage: 'Conversation not found' });
+      return res.status(404).json({ errorMessage: 'Conversation non trouvée' });
     }
     return res.status(200).json({ data: conversation });
   })

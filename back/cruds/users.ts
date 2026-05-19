@@ -16,7 +16,7 @@ export const createUser = async (
   const result = await baseCRUD.query(query, [username, email, passwordHash]);
   return {
     id: result.rows[0].id as string,
-    message: 'user successfully created',
+    message: 'Utilisateur créé avec succès',
   };
 };
 
@@ -39,7 +39,7 @@ export const updateUser = async (
       'UPDATE users SET username = $1, email = $2, updated_at = NOW() WHERE id = $3';
     await baseCRUD.query(query, [username, email, userId]);
   }
-  return 'user successfully updated';
+  return 'Utilisateur mis à jour avec succès';
 };
 
 export const deleteUser = baseCRUD.deleteOne;

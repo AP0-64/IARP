@@ -15,7 +15,7 @@ export const createConversation = async (
   const result = await baseCRUD.query(query, [userId, characterId]);
   return {
     id: result.rows[0].id as string,
-    message: 'conversation successfully created',
+    message: 'Conversation créée avec succès',
   };
 };
 

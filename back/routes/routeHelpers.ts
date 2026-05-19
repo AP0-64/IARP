@@ -18,7 +18,7 @@ export const asyncHandler = (
         return;
       }
       const message =
-        error instanceof Error ? error.message : 'Erreur inconnue';
+        error instanceof Error ? error.message : 'Erreur serveur interne';
       res.status(500).json({ errorMessage: message });
     }
   };

@@ -16,7 +16,7 @@ export const createMessage = async (
   const result = await baseCRUD.query(query, [conversationId, roleIa, content]);
   return {
     id: result.rows[0].id as string,
-    message: 'message successfully created',
+    message: 'Message créé avec succès',
   };
 };
 

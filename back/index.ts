@@ -36,8 +36,9 @@ const app = express();
 // Rate limiting middleware
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.',
+  max: 100, // limiter chaque IP à 100 requêtes par fenêtre
+  message:
+    'Trop de requêtes depuis cette adresse IP, veuillez réessayer plus tard.',
 });
 
 // Middleware
@@ -59,57 +60,57 @@ app.get('/health', (_req: express.Request, res: express.Response) => {
 app.use((_req: express.Request, res: express.Response) => {
   res
     .status(404)
-    .json({ errorMessage: `Route ${_req.method} ${_req.path} not found` });
+    .json({ errorMessage: `Route ${_req.method} ${_req.path} non trouvée` });
 });
 
 // Global error handler middleware
 app.use((err: Error, req: express.Request, res: express.Response) => {
-  console.error('Error:', err);
+  console.error('Erreur:', err);
   res.status(500).json({
-    errorMessage: 'Internal server error',
+    errorMessage: 'Erreur interne du serveur',
     ...(process.env.NODE_ENV === 'development' && { details: err.message }),
   });
 });
 
 // Global process error handlers
 process.on('uncaughtException', (err: Error) => {
-  console.error('Uncaught Exception:', err);
+  console.error('Exception non gérée:', err);
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason: Error | string) => {
-  console.error('Unhandled Rejection:', reason);
+  console.error('Promesse rejetée non gérée:', reason);
   process.exit(1);
 });
 
 // Test database connection
 connection.query('SELECT NOW()', (err: Error | null) => {
   if (err) {
-    console.error('Database connection error:', err.message);
+    console.error('Erreur de connexion à la base de données:', err.message);
     process.exit(1);
   }
-  console.info('Database connected successfully');
+  console.info('Base de données connectée avec succès');
 });
 
 // Start server
 const server = app.listen(port, () => {
-  console.info(`Server running on http://localhost:${port}`);
+  console.info(`Serveur en cours d'exécution sur http://localhost:${port}`);
 });
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.info('SIGTERM signal received: closing HTTP server');
+  console.info('Signal SIGTERM reçu: fermeture du serveur HTTP');
   server.close(() => {
-    console.info('HTTP server closed');
+    console.info('Serveur HTTP fermé');
     connection.end();
     process.exit(0);
   });
 });
 
 process.on('SIGINT', () => {
-  console.info('SIGINT signal received: closing HTTP server');
+  console.info('Signal SIGINT reçu: fermeture du serveur HTTP');
   server.close(() => {
-    console.info('HTTP server closed');
+    console.info('Serveur HTTP fermé');
     connection.end();
     process.exit(0);
   });
