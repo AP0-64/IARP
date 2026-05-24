@@ -49,8 +49,17 @@ usersRouter.put(
   '/:id',
   asyncHandler(async (req: Request, res: Response) => {
     const userId = validateUUID(req.params.id);
-    const username = validateUsername(req.body.username);
-    const email = validateEmail(req.body.email);
+    // Valider que au moins un champ est fourni
+    if (!req.body.username && !req.body.email && !req.body.password) {
+      return res.status(400).json({
+        errorMessage:
+          'Au moins un champ (username, email ou password) doit être fourni',
+      });
+    }
+    const username = req.body.username
+      ? validateUsername(req.body.username)
+      : undefined;
+    const email = req.body.email ? validateEmail(req.body.email) : undefined;
     const password = validateOptionalPassword(req.body.password);
 
     const message = await userModel.updateUser(

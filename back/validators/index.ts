@@ -192,19 +192,19 @@ export const validateDescription = (description: unknown): string => {
   return description.trim();
 };
 
-// UUID validator (basic check)
+// UUID validator (accepte les UUIDs v4 générés par PostgreSQL)
 export const validateUUID = (id: unknown): string => {
   if (typeof id !== 'string') {
-    throw new ValidationError('ID must be a string');
+    throw new ValidationError('ID doit être une chaîne de caractères');
   }
   if (id.trim().length === 0) {
-    throw new ValidationError('ID cannot be empty');
+    throw new ValidationError('ID ne peut pas être vide');
   }
-  // Basic UUID v4 validation
+  // UUID v4 validation - accepte les UUIDs générés par gen_random_uuid()
   const uuidRegex =
     /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   if (!uuidRegex.test(id)) {
-    throw new ValidationError('Invalid UUID format');
+    throw new ValidationError('Format UUID invalide');
   }
   return id;
 };

@@ -25,20 +25,32 @@ export const findAllUsers = baseCRUD.findAll;
 
 export const updateUser = async (
   userId: string,
-  username: string,
-  email: string,
+  username?: string,
+  email?: string,
   password?: string
 ): Promise<string> => {
+  const updates: string[] = [];
+  const values: (string | null)[] = [];
+
+  if (username !== undefined) {
+    updates.push(`username = $${updates.length + 1}`);
+    values.push(username);
+  }
+  if (email !== undefined) {
+    updates.push(`email = $${updates.length + 1}`);
+    values.push(email);
+  }
   if (password !== undefined) {
     const passwordHash = await hashPassword(password);
-    const query =
-      'UPDATE users SET username = $1, email = $2, password_hash = $3, updated_at = NOW() WHERE id = $4';
-    await baseCRUD.query(query, [username, email, passwordHash, userId]);
-  } else {
-    const query =
-      'UPDATE users SET username = $1, email = $2, updated_at = NOW() WHERE id = $3';
-    await baseCRUD.query(query, [username, email, userId]);
+    updates.push(`password_hash = $${updates.length + 1}`);
+    values.push(passwordHash);
   }
+
+  updates.push(`updated_at = NOW()`);
+  values.push(userId);
+
+  const query = `UPDATE users SET ${updates.join(', ')} WHERE id = $${values.length}`;
+  await baseCRUD.query(query, values);
   return 'Utilisateur mis à jour avec succès';
 };
 

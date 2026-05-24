@@ -52,9 +52,23 @@ charactersRouter.put(
   '/:id',
   asyncHandler(async (req: Request, res: Response) => {
     const characterId = validateUUID(req.params.id);
-    const name = validateCharacterName(req.body.name);
-    const systemPrompt = validateSystemPrompt(req.body.systemPrompt);
-    const descriptionIa = validateDescription(req.body.descriptionIa);
+    // Valider que au moins un champ est fourni
+    if (!req.body.name && !req.body.systemPrompt && !req.body.descriptionIa) {
+      return res.status(400).json({
+        errorMessage:
+          'Au moins un champ (name, systemPrompt ou descriptionIa) doit être fourni',
+      });
+    }
+    const name = req.body.name
+      ? validateCharacterName(req.body.name)
+      : undefined;
+    const systemPrompt =
+      req.body.systemPrompt !== undefined
+        ? validateSystemPrompt(req.body.systemPrompt)
+        : undefined;
+    const descriptionIa = req.body.descriptionIa
+      ? validateDescription(req.body.descriptionIa)
+      : undefined;
 
     const message = await characterModel.updateCharacter(
       characterId,
