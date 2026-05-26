@@ -2,23 +2,17 @@ import express from 'express';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 
+// Charger les variables d'environnement EN PREMIER
+dotenv.config();
+
 import usersRouter from './routes/usersRouter';
 import charactersRouter from './routes/charactersRouter';
 import conversationsRouter from './routes/conversationsRouter';
 import messagesRouter from './routes/messagesRouter';
 import connection from './db-config';
 
-// Charger les variables d'environnement
-dotenv.config();
-
 // Valider les variables d'environnement critiques
-const requiredEnvVars = [
-  'DB_USER',
-  'DB_PASSWORD',
-  'DB_HOST',
-  'DB_PORT',
-  'DB_NAME',
-];
+const requiredEnvVars = ['DATABASE_URL'];
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {
