@@ -1,14 +1,5 @@
 # Variables de base de données
-
-# Option 1: Utiliser DATABASE_URL directement
 DATABASE_URL=postgresql://username:password@hostname:5432/dbname
-
-# Option 2: Utiliser les variables individuelles (DATABASE_URL aura la priorité si défini)
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=database_name
 
 # Variables d'application
 PORT=4000
