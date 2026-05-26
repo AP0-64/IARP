@@ -83,17 +83,17 @@ connection.query('SELECT NOW()', (err: Error | null) => {
     console.error('Erreur de connexion à la base de données:', err.message);
     process.exit(1);
   }
-  console.info('Base de données connectée avec succès');
+  console.info('Base de données connectée avec succès\n');
 });
 
 // Start server
 const server = app.listen(port, () => {
-  console.info(`Serveur en cours d'exécution sur http://localhost:${port}`);
+  console.info(`\nServeur en cours d'exécution sur http://localhost:${port}`);
 });
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.info('Signal SIGTERM reçu: fermeture du serveur HTTP');
+  console.info('\nSignal SIGTERM reçu: fermeture du serveur HTTP');
   server.close(() => {
     console.info('Serveur HTTP fermé');
     connection.end();
@@ -102,7 +102,7 @@ process.on('SIGTERM', () => {
 });
 
 process.on('SIGINT', () => {
-  console.info('Signal SIGINT reçu: fermeture du serveur HTTP');
+  console.info('\nSignal SIGINT reçu: fermeture du serveur HTTP');
   server.close(() => {
     console.info('Serveur HTTP fermé');
     connection.end();
