@@ -8,38 +8,38 @@ API Backend du projet IARP construit avec Express.js et TypeScript.
 - npm ou yarn
 - PostgreSQL (v12 ou supérieur)
 
-## Installation
+## Installation des dépendances
 
-### 1. Installer les dépendances
+Depuis la racine du projet, installez les dépendances du backend et de la racine :
 
 ```bash
-npm install
+npm run install:all
 ```
 
-### 2. Configurer les variables d'environnement
-
-Copiez le fichier `.env.example` en `.env` et remplissez vos identifiants de base de données :
+Ou installez manuellement :
 
 ```bash
-cp .env.example .env
+npm install && cd back && npm install
+```
+
+Copiez le fichier `env_exemple.txt` en `.env` et remplissez vos identifiants de base de données :
+
+```bash
+cp env_exemple.txt .env
 ```
 
 Éditez `.env` avec votre configuration de base de données :
 
 ```env
 # Configuration de la base de données
-DB_USER=postgres
-DB_PASSWORD=votre_mot_de_passe
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=nom_base_de_donnees
+DATABASE_URL=postgresql://username:password@hostname:5432/dbname
 
 # Application
-PORT=3000
+PORT=4000
 NODE_ENV=development
 ```
 
-### 3. Initialiser la base de données
+## Initialiser la base de données
 
 Exécutez le schéma SQL pour créer les tables :
 
@@ -51,13 +51,17 @@ psql -U postgres -d nom_base_de_donnees -f ../init/schema.sql
 
 ### Démarrer le serveur en mode développement
 
+Depuis la racine du projet :
+
 ```bash
 npm run dev
 ```
 
-Le serveur s'exécutera sur `http://localhost:3000` par défaut.
+Le serveur s'exécutera sur `http://localhost:4000` par défaut.
 
 ### Construire pour la production
+
+Depuis la racine du projet :
 
 ```bash
 npm run build
@@ -147,4 +151,4 @@ L'API retourne les erreurs dans un format JSON cohérent :
 - Toutes les entrées sont validées à l'aide du module `validators`
 - Les noms des champs de la base de données utilisent `snake_case` tandis que TypeScript utilise `camelCase`
 - La conversion automatique entre les formats se fait dans la couche CRUD
-- Ne validez jamais les fichiers `.env` ; utilisez `.env.example` comme modèle
+- Ne validez jamais les fichiers `.env` ; utilisez `env_exemple.txt` comme modèle
