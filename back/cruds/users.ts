@@ -5,6 +5,13 @@ import { createBaseCRUD } from './baseCRUD';
 
 const baseCRUD = createBaseCRUD<User>({ tableName: 'users' });
 
+// Fonction helper pour exclure le passwordHash
+const excludePassword = (user: User): Omit<User, 'passwordHash'> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { passwordHash, ...userWithoutPassword } = user;
+  return userWithoutPassword;
+};
+
 export const createUser = async (
   username: string,
   email: string,
@@ -20,8 +27,15 @@ export const createUser = async (
   };
 };
 
-export const findOneUser = baseCRUD.findOne;
-export const findAllUsers = baseCRUD.findAll;
+export const findOneUser = async (id: string) => {
+  const user = await baseCRUD.findOne(id);
+  return user ? excludePassword(user) : null;
+};
+
+export const findAllUsers = async () => {
+  const users = await baseCRUD.findAll();
+  return users.map(excludePassword);
+};
 
 export const updateUser = async (
   userId: string,
