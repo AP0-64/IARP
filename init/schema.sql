@@ -1,3 +1,5 @@
+CREATE TYPE role_enum AS ENUM ('user', 'assistant');
+
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
     username VARCHAR(100) NOT NULL UNIQUE,
@@ -27,7 +29,7 @@ CREATE TABLE conversations (
 CREATE TABLE messages (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
     conversation_id UUID REFERENCES conversations(id) NOT NULL,
-    role_ia ENUM('user', 'assistant') NOT NULL,
+    role_ia role_enum NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL

@@ -44,7 +44,7 @@ NODE_ENV=development
 Exécutez le schéma SQL pour créer les tables :
 
 ```bash
-psql -U postgres -d nom_base_de_donnees -f ../init/schema.sql
+psql -U postgres -h db.faaqkxtpelcxomngrgtm.supabase.co -d postgres -f ../init/schema.sql
 ```
 
 ## Développement
