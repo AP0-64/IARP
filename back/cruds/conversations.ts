@@ -30,4 +30,29 @@ export const findConversationsByUser = async (
   return result.rows.map(row => snakeToCamel<Conversation>(row));
 };
 
+export const updateConversation = async (
+  conversationId: string,
+  userId?: string,
+  characterId?: string
+): Promise<string> => {
+  const updates: string[] = [];
+  const values: string[] = [];
+
+  if (userId !== undefined) {
+    updates.push(`user_id = $${updates.length + 1}`);
+    values.push(userId);
+  }
+  if (characterId !== undefined) {
+    updates.push(`character_id = $${updates.length + 1}`);
+    values.push(characterId);
+  }
+
+  updates.push(`updated_at = NOW()`);
+  values.push(conversationId);
+
+  const query = `UPDATE conversations SET ${updates.join(', ')} WHERE id = $${values.length}`;
+  await baseCRUD.query(query, values);
+  return 'Conversation mise à jour avec succès';
+};
+
 export const deleteConversation = baseCRUD.deleteOne;

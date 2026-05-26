@@ -84,8 +84,12 @@ charactersRouter.delete(
   '/:id',
   asyncHandler(async (req: Request, res: Response) => {
     const characterId = validateUUID(req.params.id);
-    const message = await characterModel.deleteCharacter(characterId);
-    return res.status(200).json({ message });
+    try {
+      const message = await characterModel.deleteCharacter(characterId);
+      return res.status(200).json({ message });
+    } catch {
+      return res.status(404).json({ errorMessage: 'Personnage non trouvé' });
+    }
   })
 );
 

@@ -52,12 +52,42 @@ conversationsRouter.get(
   })
 );
 
+conversationsRouter.put(
+  '/:id',
+  asyncHandler(async (req: Request, res: Response) => {
+    const conversationId = validateUUID(req.params.id);
+    // Valider que au moins un champ est fourni
+    if (!req.body.userId && !req.body.characterId) {
+      return res.status(400).json({
+        errorMessage:
+          'Au moins un champ (userId ou characterId) doit être fourni',
+      });
+    }
+    const userId = req.body.userId ? validateUUID(req.body.userId) : undefined;
+    const characterId = req.body.characterId
+      ? validateUUID(req.body.characterId)
+      : undefined;
+
+    const message = await conversationModel.updateConversation(
+      conversationId,
+      userId,
+      characterId
+    );
+    return res.status(200).json({ message });
+  })
+);
+
 conversationsRouter.delete(
   '/:id',
   asyncHandler(async (req: Request, res: Response) => {
     const conversationId = validateUUID(req.params.id);
-    const message = await conversationModel.deleteConversation(conversationId);
-    return res.status(200).json({ message });
+    try {
+      const message =
+        await conversationModel.deleteConversation(conversationId);
+      return res.status(200).json({ message });
+    } catch {
+      return res.status(404).json({ errorMessage: 'Conversation non trouvée' });
+    }
   })
 );
 

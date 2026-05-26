@@ -76,8 +76,12 @@ usersRouter.delete(
   '/:id',
   asyncHandler(async (req: Request, res: Response) => {
     const userId = validateUUID(req.params.id);
-    const message = await userModel.deleteUser(userId);
-    return res.status(200).json({ message });
+    try {
+      const message = await userModel.deleteUser(userId);
+      return res.status(200).json({ message });
+    } catch {
+      return res.status(404).json({ errorMessage: 'Utilisateur non trouvé' });
+    }
   })
 );
 

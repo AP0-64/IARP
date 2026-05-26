@@ -32,4 +32,29 @@ export const findMessagesByConversation = async (
   return result.rows.map(row => snakeToCamel<Message>(row));
 };
 
+export const updateMessage = async (
+  messageId: string,
+  roleIa?: 'user' | 'assistant',
+  content?: string
+): Promise<string> => {
+  const updates: string[] = [];
+  const values: (string | null)[] = [];
+
+  if (roleIa !== undefined) {
+    updates.push(`role_ia = $${updates.length + 1}`);
+    values.push(roleIa);
+  }
+  if (content !== undefined) {
+    updates.push(`content = $${updates.length + 1}`);
+    values.push(content);
+  }
+
+  updates.push(`updated_at = NOW()`);
+  values.push(messageId);
+
+  const query = `UPDATE messages SET ${updates.join(', ')} WHERE id = $${values.length}`;
+  await baseCRUD.query(query, values);
+  return 'Message mis à jour avec succès';
+};
+
 export const deleteMessage = baseCRUD.deleteOne;

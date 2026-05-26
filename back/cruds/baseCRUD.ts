@@ -40,6 +40,12 @@ export const createBaseCRUD = <T>(config: CRUDConfig) => {
      * Supprimer un seul enregistrement par ID
      */
     deleteOne: async (id: string): Promise<string> => {
+      // Vérifier que l'enregistrement existe avant suppression
+      const checkQuery = `SELECT ${primaryKey} FROM ${tableName} WHERE ${primaryKey} = $1`;
+      const checkResult = await connection.query(checkQuery, [id]);
+      if (checkResult.rows.length === 0) {
+        throw new Error(`${tableName} non trouvé`);
+      }
       const query = `DELETE FROM ${tableName} WHERE ${primaryKey} = $1`;
       await connection.query(query, [id]);
       return `${tableName} supprimé avec succès`;
