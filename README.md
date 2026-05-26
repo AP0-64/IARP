@@ -43,10 +43,6 @@ npm run update:all
 
 ## Base de données
 
-### Mot de passe de la base de données
-
-Le mot de passe par défaut pour la base de données est `gQE?p?bL@dBj5jge`.
-
 ### Initialisation du schéma
 
 Le schéma SQL est disponible dans le fichier `init/schema.sql`.
