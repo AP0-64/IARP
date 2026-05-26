@@ -96,6 +96,10 @@ back/
 
 ## Points de terminaison API
 
+### Vérification de la santé
+
+- `GET /health` - Vérifier l'état du serveur
+
 ### Utilisateurs
 
 - `GET /api/users` - Récupérer tous les utilisateurs
@@ -127,10 +131,6 @@ back/
 - `GET /api/messages/conversation/:conversationId` - Récupérer les messages d'une conversation
 - `POST /api/messages` - Créer un nouveau message
 - `DELETE /api/messages/:id` - Supprimer un message
-
-### Vérification de la santé
-
-- `GET /health` - Vérifier l'état du serveur
 
 ## Gestion des erreurs
 
